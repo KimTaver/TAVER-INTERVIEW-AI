@@ -21,20 +21,28 @@ const client = new Client({
 client.commands = new Collection();
 
 // ==========================
-// Load Slash Commands
+// Load Commands
 // ==========================
 const commandsPath = path.join(__dirname, "commands");
 
-const commandFiles = fs
-  .readdirSync(commandsPath)
-  .filter(file => file.endsWith(".js"));
+if (fs.existsSync(commandsPath)) {
+  const commandFiles = fs
+    .readdirSync(commandsPath)
+    .filter(file => file.endsWith(".js"));
 
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
+  for (const file of commandFiles) {
+    try {
+      const command = require(`./commands/${file}`);
 
-  if ("data" in command && "execute" in command) {
-    client.commands.set(command.data.name, command);
-    console.log(`✅ Loaded command: ${command.data.name}`);
+      if ("data" in command && "execute" in command) {
+        client.commands.set(command.data.name, command);
+        console.log(`✅ Loaded command: ${command.data.name}`);
+      } else {
+        console.log(`⚠️ ${file} is missing data or execute.`);
+      }
+    } catch (err) {
+      console.error(`❌ Failed to load ${file}`, err);
+    }
   }
 }
 
@@ -43,30 +51,39 @@ for (const file of commandFiles) {
 // ==========================
 const eventsPath = path.join(__dirname, "events");
 
-const eventFiles = fs
-  .readdirSync(eventsPath)
-  .filter(file => file.endsWith(".js"));
+if (fs.existsSync(eventsPath)) {
+  const eventFiles = fs
+    .readdirSync(eventsPath)
+    .filter(file => file.endsWith(".js"));
 
-for (const file of eventFiles) {
-  const event = require(`./events/${file}`);
+  for (const file of eventFiles) {
+    try {
+      const event = require(`./events/${file}`);
 
-  if (event.once) {
-    client.once(event.name, (...args) =>
-      event.execute(...args)
-    );
-  } else {
-    client.on(event.name, (...args) =>
-      event.execute(...args)
-    );
+      if (event.once) {
+        client.once(event.name, (...args) =>
+          event.execute(...args)
+        );
+      } else {
+        client.on(event.name, (...args) =>
+          event.execute(...args)
+        );
+      }
+
+      console.log(`✅ Loaded event: ${event.name}`);
+    } catch (err) {
+      console.error(`❌ Failed to load ${file}`, err);
+    }
   }
 }
 
+// ==========================
+// Ready
+// ==========================
 client.once("ready", () => {
   console.clear();
 
-  console.log(
-    `✅ ${client.user.tag} is online!`
-  );
+  console.log(`✅ Logged in as ${client.user.tag}`);
 
   client.user.setPresence({
     status: "online",
@@ -79,4 +96,11 @@ client.once("ready", () => {
   });
 });
 
+// ==========================
+// Login
+// ==========================
 client.login(process.env.TOKEN);
+
+// Prevent crashes
+process.on("unhandledRejection", console.error);
+process.on("uncaughtException", console.error);
