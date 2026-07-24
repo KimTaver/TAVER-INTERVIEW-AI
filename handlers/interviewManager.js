@@ -4,8 +4,9 @@ const interviews = new Map();
 
 function startInterview(userId) {
   interviews.set(userId, {
-    question: 0,
+    currentQuestion: 0,
     answers: [],
+    startedAt: Date.now(),
   });
 }
 
@@ -13,12 +14,16 @@ function hasInterview(userId) {
   return interviews.has(userId);
 }
 
+function getInterview(userId) {
+  return interviews.get(userId);
+}
+
 function getQuestion(userId) {
   const interview = interviews.get(userId);
 
   if (!interview) return null;
 
-  return questions[interview.question];
+  return questions[interview.currentQuestion];
 }
 
 function saveAnswer(userId, answer) {
@@ -27,13 +32,13 @@ function saveAnswer(userId, answer) {
   if (!interview) return null;
 
   interview.answers.push(answer);
-  interview.question++;
+  interview.currentQuestion++;
 
-  if (interview.question >= questions.length) {
+  if (interview.currentQuestion >= questions.length) {
     return null;
   }
 
-  return questions[interview.question];
+  return questions[interview.currentQuestion];
 }
 
 function finishInterview(userId) {
@@ -47,6 +52,7 @@ function finishInterview(userId) {
 module.exports = {
   startInterview,
   hasInterview,
+  getInterview,
   getQuestion,
   saveAnswer,
   finishInterview,
