@@ -20,20 +20,32 @@ console.log("Transcript file:", FILE);
 function saveTranscript(user, interview) {
   let data = [];
 
+  // Create file if it doesn't exist
   if (!fs.existsSync(FILE)) {
     fs.writeFileSync(FILE, "[]");
   }
 
+  // Read existing transcripts safely
   try {
-    data = JSON.parse(fs.readFileSync(FILE, "utf8"));
+    const content = fs.readFileSync(FILE, "utf8").trim();
+
+    if (!content) {
+      data = [];
+    } else {
+      data = JSON.parse(content);
+    }
   } catch (err) {
     console.error("Failed to read interviews.json:", err);
+
+    // Reset corrupted file
     data = [];
+    fs.writeFileSync(FILE, "[]");
   }
 
-  // Debug: show the interview object before saving
+  // Debug
   console.log("Interview data:", interview);
 
+  // Save interview
   data.push({
     user: {
       tag: user.tag,
@@ -47,6 +59,7 @@ function saveTranscript(user, interview) {
     status: "Pending Review",
   });
 
+  // Write back to file
   fs.writeFileSync(
     FILE,
     JSON.stringify(data, null, 2)
