@@ -82,8 +82,12 @@ module.exports = {
 
       const questions = require("../handlers/questions");
 
+const interviewManager = require("../handlers/interviewManager");
+
+interviewManager.startInterview(interaction.user.id);
+
 await channel.send(
-  `👋 Welcome ${interaction.user}!\n\n**Question 1/${questions.length}**\n\n${questions[0]}`
+  `👋 Welcome ${interaction.user}!\n\n**Question 1/${questions.length}**\n\n${interviewManager.getQuestion(interaction.user.id)}`
 );
     }
 
