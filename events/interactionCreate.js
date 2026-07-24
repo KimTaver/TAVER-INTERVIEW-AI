@@ -317,9 +317,9 @@ if (interaction.customId.startsWith("transcript_")) {
 
 
   const interview =
-    data.find(
-      i => i.id === userId
-    );
+  data.find(
+    i => i.user.id === userId
+  );
 
 
   if (!interview) {
