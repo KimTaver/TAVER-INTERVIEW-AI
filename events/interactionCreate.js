@@ -340,19 +340,12 @@ if (interaction.customId.startsWith("transcript_")) {
     .setTimestamp();
 
 
-  interview.answers.forEach(
-    (answer, index) => {
-
-      embed.addFields({
-        name:
-          `Question ${index + 1}`,
-
-        value:
-          answer || "No answer",
-      });
-
-    }
-  );
+  interview.answers.forEach((answer, index) => {
+  embed.addFields({
+    name: questions[index] || `Question ${index + 1}`,
+    value: answer || "No answer",
+  });
+});
 
 
     await interaction.reply({
