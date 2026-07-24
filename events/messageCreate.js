@@ -19,13 +19,26 @@ module.exports = {
       message.content
     );
 
-    // Interview finished
+    // ==========================
+    // Interview Finished
+    // ==========================
     if (!nextQuestion) {
-      const interviewData = interviewManager.finishInterview(
-        message.author.id
+
+      const interviewData =
+        interviewManager.finishInterview(
+          message.author.id
+        );
+
+      // Save transcript
+      transcript.saveTranscript(
+        message.author,
+        interviewData
       );
 
-      transcript.saveTranscript(
+      // Send to review channel
+      await transcript.sendForReview(
+        message.client,
+        message.guild,
         message.author,
         interviewData
       );
@@ -33,7 +46,7 @@ module.exports = {
       await message.channel.send(
         "## ✅ Interview Completed\n" +
         "Thank you for completing your interview!\n\n" +
-        "Your responses have been saved and will now be reviewed by our staff.\n" +
+        "Your responses have been saved and have been sent to our staff for review.\n" +
         "Please wait patiently while we process your application."
       );
 
