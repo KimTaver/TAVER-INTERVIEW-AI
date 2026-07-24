@@ -34,6 +34,8 @@ function setGuild(guildId, data) {
     ...data,
   };
 
+  console.log("Saving guild settings:", settings);
+
   saveSettings(settings);
 }
 
