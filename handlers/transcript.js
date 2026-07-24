@@ -87,4 +87,64 @@ async function sendForReview(
   const embed = new EmbedBuilder()
     .setColor(0xF1C40F)
     .setTitle("📋 New Interview Submission")
-    .
+    .setDescription(
+      "A new interview has been submitted for review."
+    )
+    .addFields(
+      {
+        name: "Applicant",
+        value: `${user.tag}`,
+        inline: true,
+      },
+      {
+        name: "User ID",
+        value: user.id,
+        inline: true,
+      },
+      {
+        name: "Questions Answered",
+        value: `${interview.answers.length}`,
+        inline: true,
+      },
+      {
+        name: "Status",
+        value: "🟡 Pending Review",
+      }
+    )
+    .setThumbnail(user.displayAvatarURL())
+    .setTimestamp();
+
+  const buttons =
+    new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId(`accept_${user.id}`)
+        .setLabel("Accept")
+        .setStyle(ButtonStyle.Success)
+        .setEmoji("✅"),
+
+      new ButtonBuilder()
+        .setCustomId(`reject_${user.id}`)
+        .setLabel("Reject")
+        .setStyle(ButtonStyle.Danger)
+        .setEmoji("❌"),
+
+      new ButtonBuilder()
+        .setCustomId(`transcript_${user.id}`)
+        .setLabel("Transcript")
+        .setStyle(ButtonStyle.Secondary)
+        .setEmoji("📄")
+    );
+
+  await channel.send({
+    content: `<@&${guildSettings.staffRole}>`,
+    embeds: [embed],
+    components: [buttons],
+  });
+
+  console.log("✅ Review message sent.");
+}
+
+module.exports = {
+  saveTranscript,
+  sendForReview,
+};
