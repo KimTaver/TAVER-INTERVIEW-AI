@@ -3,12 +3,17 @@ const {
   PermissionFlagsBits,
 } = require("discord.js");
 
+const questions = require("../handlers/questions");
+const interviewManager = require("../handlers/interviewManager");
+
 module.exports = {
   name: "interactionCreate",
 
   async execute(interaction) {
 
+    // ==========================
     // Slash Commands
+    // ==========================
     if (interaction.isChatInputCommand()) {
       const command =
         interaction.client.commands.get(interaction.commandName);
@@ -36,7 +41,9 @@ module.exports = {
       return;
     }
 
+    // ==========================
     // Buttons
+    // ==========================
     if (!interaction.isButton()) return;
 
     // ==========================
@@ -44,8 +51,16 @@ module.exports = {
     // ==========================
     if (interaction.customId === "start_interview") {
 
+      // Prevent multiple interviews
+      if (interviewManager.hasInterview(interaction.user.id)) {
+        return interaction.reply({
+          content: "❌ You already have an interview in progress.",
+          ephemeral: true,
+        });
+      }
+
       const channel = await interaction.guild.channels.create({
-        name: `interview-${interaction.user.username}`,
+        name: `interview-${interaction.user.username.toLowerCase()}`,
         type: ChannelType.GuildText,
 
         permissionOverwrites: [
@@ -74,34 +89,27 @@ module.exports = {
         ],
       });
 
+      // Start interview
+      interviewManager.startInterview(interaction.user.id);
+
       await interaction.reply({
-        content:
-          `✅ Your interview has started!\nGo to ${channel}.`,
+        content: `✅ Your interview has started!\nGo to ${channel}.`,
         ephemeral: true,
       });
 
-      const questions = require("../handlers/questions");
-
-const interviewManager = require("../handlers/interviewManager");
-
-interviewManager.startInterview(interaction.user.id);
-
-await channel.send(
-  `👋 Welcome ${interaction.user}!\n\n**Question 1/${questions.length}**\n\n${interviewManager.getQuestion(interaction.user.id)}`
-);
+      await channel.send(
+        `👋 Welcome ${interaction.user}!\n\n**Question 1/${questions.length}**\n\n${interviewManager.getQuestion(interaction.user.id)}`
+      );
     }
 
     // ==========================
-    // CANCEL
+    // CANCEL INTERVIEW
     // ==========================
     if (interaction.customId === "cancel_interview") {
-
-      await interaction.reply({
+      return interaction.reply({
         content: "❌ Interview cancelled.",
         ephemeral: true,
       });
-
     }
-
   },
 };
