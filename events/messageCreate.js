@@ -6,7 +6,12 @@ module.exports = {
   name: "messageCreate",
 
   async execute(message) {
-    if (message.author.bot) return;
+
+  console.log(
+    `Message from ${message.author.tag}: ${message.content}`
+  );
+
+  if (message.author.bot) return;
 
     if (!message.guild) return;
 
