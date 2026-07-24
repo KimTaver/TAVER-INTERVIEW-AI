@@ -29,9 +29,18 @@ function getQuestion(userId) {
 function saveAnswer(userId, answer) {
   const interview = interviews.get(userId);
 
-  if (!interview) return null;
+  if (!interview) {
+    console.log("❌ No interview found for:", userId);
+    return null;
+  }
+
+  console.log("Before:", interview.answers);
+  console.log("Saving answer:", answer);
 
   interview.answers.push(answer);
+
+  console.log("After:", interview.answers);
+
   interview.currentQuestion++;
 
   if (interview.currentQuestion >= questions.length) {
