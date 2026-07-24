@@ -80,10 +80,11 @@ module.exports = {
         ephemeral: true,
       });
 
-      await channel.send({
-        content:
-          `👋 Welcome ${interaction.user}!\n\n**Question 1/10**\n\nTell us about yourself.`,
-      });
+      const questions = require("../handlers/questions");
+
+await channel.send(
+  `👋 Welcome ${interaction.user}!\n\n**Question 1/${questions.length}**\n\n${questions[0]}`
+);
     }
 
     // ==========================
