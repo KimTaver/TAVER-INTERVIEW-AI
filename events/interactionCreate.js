@@ -355,9 +355,13 @@ if (interaction.customId.startsWith("transcript_")) {
   );
 
 
-  await interaction.reply({
+    await interaction.reply({
     embeds: [embed],
     ephemeral: true,
   });
 
+  return;
 }
+
+  }
+};
