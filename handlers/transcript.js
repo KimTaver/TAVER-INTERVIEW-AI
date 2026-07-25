@@ -47,17 +47,21 @@ function saveTranscript(user, interview) {
 
   // Save interview
   data.push({
-    user: {
-      tag: user.tag,
-      id: user.id,
-    },
-    date: new Date().toISOString(),
-    answers: interview.answers,
-    startedAt: interview.startedAt || Date.now(),
-    finishedAt: Date.now(),
-    totalQuestions: interview.answers.length,
-    status: "Pending Review",
-  });
+  user: {
+    tag: user.tag,
+    id: user.id,
+  },
+  date: new Date().toISOString(),
+
+  questions: interview.questions,
+
+  answers: interview.answers,
+
+  startedAt: interview.startedAt || Date.now(),
+  finishedAt: Date.now(),
+  totalQuestions: interview.questions.length,
+  status: "Pending Review",
+});
 
   // Write back to file
   fs.writeFileSync(
@@ -115,10 +119,10 @@ async function sendForReview(
         inline: true,
       },
       {
-        name: "Questions Answered",
-        value: `${interview.answers.length}`,
-        inline: true,
-      },
+  name: "Questions",
+  value: `${interview.questions.length}`,
+  inline: true,
+},
       {
         name: "Status",
         value: "🟡 Pending Review",
