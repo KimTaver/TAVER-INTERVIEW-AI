@@ -1,21 +1,133 @@
-module.exports = [
-  "👋 Welcome to the Taver Interview System.\n\nLet's get started.\n\n**1. What is your Discord username?**",
+// handlers/questions.js
 
-  "**2. How old are you?**",
+const questions = {
+  ranks: [
+    {
+      question: "What is the duty of a Rookie?",
+      answer: "Observe and learn the family rules, follow orders from higher ranks, and prove loyalty through small tasks."
+    },
+    {
+      question: "What is the responsibility of a Junior?",
+      answer: "Support soldiers and enforcers, train skills, and prove reliability."
+    },
+    {
+      question: "What is the duty of a Street Soldier?",
+      answer: "Carry out missions, protect juniors, and enforce discipline."
+    },
+    {
+      question: "What is the duty of an Elite Enforcer?",
+      answer: "Protect the family, punish betrayal, and lead soldiers in battle."
+    },
+    {
+      question: "Who commands a small squad of soldiers?",
+      answer: "Crew Leader."
+    },
+    {
+      question: "Who oversees multiple Crew Leaders?",
+      answer: "Veteran Lieutenant."
+    },
+    {
+      question: "Who controls major family operations?",
+      answer: "Shadow Warlord."
+    },
+    {
+      question: "Who acts as the Leader's voice?",
+      answer: "Deputy Leader."
+    },
+    {
+      question: "Who has supreme authority in the family?",
+      answer: "Leader."
+    }
+  ],
 
-  "**3. What country and timezone are you in?**",
+  loyalty: [
+    {
+      question: "What does loyalty mean in the N.G.N.V Family?",
+      answer: "Standing by the family, never switching sides, and remaining loyal."
+    },
+    {
+      question: "Should members backstab each other?",
+      answer: "No."
+    },
+    {
+      question: "How should you correct another member?",
+      answer: "Correct them privately, not publicly."
+    }
+  ],
 
-  "**4. Why do you want to join our organization?**",
+  discipline: [
+    {
+      question: "Why is discipline important?",
+      answer: "It keeps the family respected and organised."
+    },
+    {
+      question: "Should emotions control your actions?",
+      answer: "No."
+    }
+  ],
 
-  "**5. Do you have any previous experience in a similar role? If yes, explain briefly.**",
+  teamwork: [
+    {
+      question: "Why is teamwork important?",
+      answer: "Because the family fights as one unit."
+    },
+    {
+      question: "How should radio communication be?",
+      answer: "Short, clear, and precise."
+    }
+  ],
 
-  "**6. On average, how many hours can you be active each day?**",
+  money: [
+    {
+      question: "Should family members scam each other?",
+      answer: "Never."
+    },
+    {
+      question: "Why should members contribute money?",
+      answer: "To strengthen the family."
+    }
+  ],
 
-  "**7. How would you deal with a member who breaks the rules?**",
+  war: [
+    {
+      question: "Should you make solo pushes during war?",
+      answer: "No."
+    },
+    {
+      question: "Name three war roles.",
+      answer: "Driver, Shooter, Support."
+    }
+  ],
 
-  "**8. What do you think makes a good staff member?**",
+  crime: [
+    {
+      question: "Why should members understand RP laws?",
+      answer: "To avoid bringing unnecessary trouble to the family."
+    },
+    {
+      question: "What does 'Power means control, not recklessness' mean?",
+      answer: "Use power wisely and avoid careless actions."
+    }
+  ]
+};
 
-  "**9. Why should we choose you over other applicants?**",
+function randomQuestion(category) {
+  const list = questions[category];
+  return list[Math.floor(Math.random() * list.length)];
+}
 
-  "**10. Is there anything else you'd like us to know before we review your application?**"
-];
+function generateInterview() {
+  return [
+    randomQuestion("ranks"),
+    randomQuestion("loyalty"),
+    randomQuestion("discipline"),
+    randomQuestion("teamwork"),
+    randomQuestion("money"),
+    randomQuestion("war"),
+    randomQuestion("crime")
+  ];
+}
+
+module.exports = {
+  generateInterview
+};
