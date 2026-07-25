@@ -1,4 +1,3 @@
-const questions = require("../handlers/questions");
 const interviewManager = require("../handlers/interviewManager");
 const transcript = require("../handlers/transcript");
 
@@ -30,15 +29,15 @@ module.exports = {
     if (!nextQuestion) {
 
       const interviewData =
-        interviewManager.finishInterview(
-          message.author.id
-        );
+  interviewManager.finishInterview(
+    message.author.id
+  );
 
-      // Save transcript
-      transcript.saveTranscript(
-        message.author,
-        interviewData
-      );
+// Save transcript
+transcript.saveTranscript(
+  message.author,
+  interviewData
+);
 
       // Send to review channel
       await transcript.sendForReview(
@@ -58,14 +57,14 @@ module.exports = {
       return;
     }
 
-    const currentQuestion =
-      interviewManager.getQuestion(message.author.id);
+    const interview =
+  interviewManager.getInterview(message.author.id);
 
-    const questionNumber =
-      questions.indexOf(currentQuestion) + 1;
+const questionNumber =
+  interview.currentQuestion + 1;
 
-    await message.channel.send(
-      `## Question ${questionNumber}/${questions.length}\n\n${nextQuestion}`
-    );
+await message.channel.send(
+  `## Question ${questionNumber}/${interview.questions.length}\n\n**${nextQuestion.question}**`
+);
   },
 };
