@@ -101,33 +101,41 @@ async function sendForReview(
     return;
   }
 
-  const embed = new EmbedBuilder()
-    .setColor(0xF1C40F)
-    .setTitle("📋 New Interview Submission")
-    .setDescription(
-      "A new interview has been submitted for review."
-    )
-    .addFields(
-      {
-        name: "Applicant",
-        value: `${user.tag}`,
-        inline: true,
-      },
-      {
-        name: "User ID",
-        value: user.id,
-        inline: true,
-      },
-      {
-  name: "Questions",
-  value: `${interview.questions.length}`,
-  inline: true,
-},
-      {
-        name: "Status",
-        value: "🟡 Pending Review",
-      }
-    )
+  const aiResults = interview.results.join("\n\n");
+
+const embed = new EmbedBuilder()
+  .setColor(0x5865F2)
+  .setTitle("🤖 Taver Interview AI Report")
+  .setDescription(
+    `Interview completed by **${user.tag}**`
+  )
+  .addFields(
+    {
+      name: "👤 Applicant",
+      value: user.tag,
+      inline: true,
+    },
+    {
+      name: "🆔 User ID",
+      value: user.id,
+      inline: true,
+    },
+    {
+      name: "📝 Questions",
+      value: `${interview.questions.length}`,
+      inline: true,
+    },
+    {
+      name: "🤖 AI Evaluation",
+      value: aiResults.substring(0, 1024),
+      inline: false,
+    },
+    {
+      name: "Status",
+      value: "🟡 Pending Staff Review",
+      inline: false,
+    }
+  )
     .setThumbnail(user.displayAvatarURL())
     .setTimestamp();
 
