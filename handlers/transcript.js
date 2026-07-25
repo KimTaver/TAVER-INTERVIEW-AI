@@ -54,8 +54,8 @@ function saveTranscript(user, interview) {
   date: new Date().toISOString(),
 
   questions: interview.questions,
-
   answers: interview.answers,
+  results: interview.results,
 
   startedAt: interview.startedAt || Date.now(),
   finishedAt: Date.now(),
@@ -101,10 +101,35 @@ async function sendForReview(
     return;
   }
 
-  const aiResults = interview.results.join("\n\n");
+  const totalScore = interview.results.reduce(
+  (total, result) => total + result.score,
+  0
+);
+
+const maxScore = interview.results.length * 10;
+
+const percentage = Math.round(
+  (totalScore / maxScore) * 100
+);
+
+const recommendation =
+  percentage >= 70
+    ? "✅ PASS"
+    : "❌ FAIL";
+
+const aiResults = interview.results
+  .map(
+    (result, index) =>
+      `**Q${index + 1}** • ${result.score}/10\n${result.feedback}`
+  )
+  .join("\n\n");
 
 const embed = new EmbedBuilder()
-  .setColor(0x5865F2)
+  .setColor(
+    recommendation === "✅ PASS"
+      ? 0x57F287
+      : 0xED4245
+  )
   .setTitle("🤖 Taver Interview AI Report")
   .setDescription(
     `Interview completed by **${user.tag}**`
@@ -121,8 +146,13 @@ const embed = new EmbedBuilder()
       inline: true,
     },
     {
-      name: "📝 Questions",
-      value: `${interview.questions.length}`,
+      name: "📊 Overall Score",
+      value: `${totalScore}/${maxScore} (${percentage}%)`,
+      inline: true,
+    },
+    {
+      name: "🎯 AI Recommendation",
+      value: recommendation,
       inline: true,
     },
     {
@@ -136,8 +166,8 @@ const embed = new EmbedBuilder()
       inline: false,
     }
   )
-    .setThumbnail(user.displayAvatarURL())
-    .setTimestamp();
+  .setThumbnail(user.displayAvatarURL())
+  .setTimestamp();
 
   const buttons =
     new ActionRowBuilder().addComponents(
