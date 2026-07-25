@@ -1,9 +1,10 @@
-const questions = require("./questions");
+const { generateInterview } = require("./questions");
 
 const interviews = new Map();
 
 function startInterview(userId) {
   interviews.set(userId, {
+    questions: generateInterview(), // Generate a unique interview
     currentQuestion: 0,
     answers: [],
     startedAt: Date.now(),
@@ -23,31 +24,22 @@ function getQuestion(userId) {
 
   if (!interview) return null;
 
-  return questions[interview.currentQuestion];
+  return interview.questions[interview.currentQuestion];
 }
 
 function saveAnswer(userId, answer) {
   const interview = interviews.get(userId);
 
-  if (!interview) {
-    console.log("❌ No interview found for:", userId);
-    return null;
-  }
-
-  console.log("Before:", interview.answers);
-  console.log("Saving answer:", answer);
+  if (!interview) return null;
 
   interview.answers.push(answer);
-
-  console.log("After:", interview.answers);
-
   interview.currentQuestion++;
 
-  if (interview.currentQuestion >= questions.length) {
+  if (interview.currentQuestion >= interview.questions.length) {
     return null;
   }
 
-  return questions[interview.currentQuestion];
+  return interview.questions[interview.currentQuestion];
 }
 
 function finishInterview(userId) {
