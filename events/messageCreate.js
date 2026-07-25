@@ -31,6 +31,9 @@ module.exports = {
           message.author.id
         );
 
+console.log(interviewData.questions);
+console.log(interviewData.answers);
+
       // ==========================
       // AI Evaluation
       // ==========================
