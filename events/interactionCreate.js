@@ -7,7 +7,7 @@ const {
   ButtonStyle,
 } = require("discord.js");
 
-const questions = require("../handlers/questions");
+
 const interviewManager = require("../handlers/interviewManager");
 const transcript = require("../handlers/transcript");
 const settings = require("../handlers/settings");
@@ -133,15 +133,19 @@ module.exports = {
 
       });
 
-      await channel.send(
+      const interview =
+  interviewManager.getInterview(interaction.user.id);
 
-        `👋 Welcome ${interaction.user}!\n\n` +
-        `**Question 1/${questions.length}**\n\n` +
-        interviewManager.getQuestion(
-          interaction.user.id
-        )
+const firstQuestion =
+  interviewManager.getQuestion(interaction.user.id);
 
-      );
+await channel.send(
+
+  `👋 Welcome ${interaction.user}!\n\n` +
+  `**Question 1/${interview.questions.length}**\n\n` +
+  `**${firstQuestion.question}**`
+
+);
 
       return;
     }
@@ -340,10 +344,10 @@ if (interaction.customId.startsWith("transcript_")) {
     .setTimestamp();
 
 
-  interview.answers.forEach((answer, index) => {
+  interview.questions.forEach((q, index) => {
   embed.addFields({
-    name: questions[index] || `Question ${index + 1}`,
-    value: answer || "No answer",
+    name: q.question,
+    value: interview.answers[index] || "No answer",
   });
 });
 
