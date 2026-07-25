@@ -345,10 +345,22 @@ if (interaction.customId.startsWith("transcript_")) {
 
 
   interview.questions.forEach((q, index) => {
+
+  const result =
+    interview.results?.[index];
+
   embed.addFields({
-    name: q.question,
-    value: interview.answers[index] || "No answer",
+    name: `Question ${index + 1}`,
+    value:
+`**Question:** ${q.question}
+
+**Answer:** ${interview.answers[index] || "No answer"}
+
+**Score:** ${result ? `${result.score}/10` : "N/A"}
+
+**Feedback:** ${result ? result.feedback : "No AI feedback"}`,
   });
+
 });
 
 
